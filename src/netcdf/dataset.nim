@@ -1,8 +1,4 @@
-import std/[
-  strformat,
-  sugar,
-  os,
-]
+import std/sugar
 import ./[
   bindings,
   common,
@@ -12,9 +8,9 @@ import ./[
 ]
 
 
-proc open*[T: Dataset](_: type T,
-                       path: string,
-                       mode = omRead): Dataset =
+proc open*(_: type Dataset,
+           path: string,
+           mode = omRead): Dataset =
   handleError:
     ncOpenProc(path.cstring, mode.cint, result.id.addr)
   var
@@ -36,19 +32,22 @@ proc open*[T: Dataset](_: type T,
     for attId in 0..<natt:
       getAtt(result.id, Ncglobal, attId)
   result.unlimdimidp = unlimdimidp
-  # echo "open ", result.id
+
+proc create*(_: type Dataset,
+           path: string,
+           mode = cmClobber): Dataset =
+  handleError:
+    ncCreateProc(path.cstring, mode.cint, result.id.addr)
+
+proc endDef*(ds: Dataset) =
+  handleError:
+    ncenddefproc(ds.id)
+
+template define*(ds: Dataset, body: untyped): untyped =
+  body
+  ds.endDef()
 
 proc close*(ds: Dataset) =
   handleError:
     ncClose(ds.id)
-  # echo "close ", ds.id
 
-func `[]`*(ds: Dataset, name: string): Variable =
-  var found = false
-  for v in ds.vars:
-    if v.name == name:
-      result = v
-      found = true
-      break
-  if not found:
-    raise KeyError.newException(fmt"{name} is not a variable.")

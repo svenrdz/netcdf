@@ -1,5 +1,4 @@
 import ./netcdf/[
-  bindings,
   common,
   dataset,
   variable,
@@ -8,7 +7,6 @@ import ./netcdf/[
   jsony_hooks,
 ]
 
-export bindings
 export common
 export dataset
 export variable

@@ -4,21 +4,28 @@ import ./bindings
 type
   NcId* = cint
   NetcdfError* = object of CatchableError
-  OpenMode* = enum
+  OpenMode* {.size: sizeof(cint).} = enum
     omRead = NC_NOWRITE # read-only
     omWrite = NC_WRITE
     omShare = NC_SHARE
     omWriteShare = NC_WRITE or NC_SHARE
+  CreateMode* = enum
+    cmClobber = NC_CLOBBER
+    cmNoClobber = NC_NOCLOBBER
+    cmClassicModel = NC_CLASSIC_MODEL
+    cm64BitOffset = NC_64BIT_OFFSET
+    cmShare = NC_SHARE
+    cmNetcdf4 = NC_NETCDF4
 
   Dataset* = object
-    id*: NcId
+    id*: NcId = -1
     vars*: seq[Variable]
     dims*: seq[Dimension]
     atts*: seq[Attribute]
     unlimdimidp*: int
   Variable* = object
-    dsid*: NcId
-    id*: int
+    dsid*: NcId = -1
+    id*: int = -1
     name*: string
     dims*: seq[Dimension]
     atts*: seq[Attribute]
@@ -30,11 +37,11 @@ type
     #   floatVal*: seq[cfloat]
     # else: discard
   Dimension* = object
-    id*: int
+    id*: int = -1
     name*: string
     size*: uint
   Attribute* = object
-    vid*: int
+    vid*: int = -1
     name*: string
     size*: uint
     case xtype*: NcType
@@ -62,24 +69,3 @@ template handleError*(body: untyped) =
         $1 [$2]
         $3
         """ % [$retval.ncstrerror, $retval, body.astToStr]
-
-# proc id*(ds: Dataset): lent NcId = ds.id
-# proc `id=`*(ds: var Dataset, id: NcId) = ds.id = id
-
-# macro handleError*(body: untyped): untyped =
-#   let
-#     info = body.lineInfo
-#     bodyCopy = body.copyNimTree
-#     bodyStr = bodyCopy.repr
-#   genAst(bodyCopy, bodyStr, info):
-#     let retval: cint = bodyCopy
-#     if retval != 0:
-#       raise NetcdfError.newException:
-#         dedent"""
-
-
-# proc handleError*(retval: cint) =
-#   # let retval: cint = body
-#   if retval != 0:
-#     raise newException(NetcdfError, "Error " & $retval & ": " &
-#         $retval.ncstrerror)
