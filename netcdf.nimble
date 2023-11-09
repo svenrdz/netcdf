@@ -9,4 +9,7 @@ skipDirs      = @["c_headers", "examples"]
 
 # Dependencies
 
-requires "nim >= 1.4.0"
+requires "nim >= 2.1.1"
+
+requires "futhark >= 0.12.0"
+requires "https://github.com/treeform/jsony#head"
