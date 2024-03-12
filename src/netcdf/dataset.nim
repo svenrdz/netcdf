@@ -1,15 +1,7 @@
 import std/sugar
-import ./[
-  bindings,
-  common,
-  variable,
-  dimension,
-  attribute,
-]
+import ./[bindings, common, variable, dimension, attribute]
 
-proc open*(_: type Dataset,
-           path: string,
-           mode = omRead): Dataset =
+proc open*(_: type Dataset, path: string, mode = omRead): Dataset =
   handleError:
     ncOpenProc(path.cstring, mode.cint, result.id.addr)
   var
@@ -18,22 +10,19 @@ proc open*(_: type Dataset,
     natt: cint
     unlimdimidp: cint
   handleError:
-    ncinq(result.id, ndim.addr, nvar.addr,
-          natt.addr, unlimdimidp.addr)
+    ncinq(result.id, ndim.addr, nvar.addr, natt.addr, unlimdimidp.addr)
   result.dims = collect:
-    for dimId in 0..<ndim:
+    for dimId in 0 ..< ndim:
       result.getDim(dimId)
   result.vars = collect:
-    for varId in 0..<nvar:
+    for varId in 0 ..< nvar:
       result.getVar(varId)
   result.atts = collect:
-    for attId in 0..<natt:
+    for attId in 0 ..< natt:
       getAtt(result.id, Ncglobal, attId)
   result.unlimdimidp = unlimdimidp
 
-proc create*(_: type Dataset,
-           path: string,
-           mode = cmClobber): Dataset =
+proc create*(_: type Dataset, path: string, mode = cmClobber): Dataset =
   handleError:
     ncCreateProc(path.cstring, mode.cint, result.id.addr)
 

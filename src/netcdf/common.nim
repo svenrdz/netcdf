@@ -9,6 +9,7 @@ type
     omWrite = NC_WRITE
     omShare = NC_SHARE
     omWriteShare = NC_WRITE or NC_SHARE
+
   CreateMode* = enum
     cmClobber = NC_CLOBBER
     cmNoClobber = NC_NOCLOBBER
@@ -23,6 +24,7 @@ type
     dims*: seq[Dimension]
     atts*: seq[Attribute]
     unlimdimidp*: int
+
   Variable* = object
     dsid*: NcId = -1
     id*: int = -1
@@ -36,10 +38,12 @@ type
     # of NcFloat:
     #   floatVal*: seq[cfloat]
     # else: discard
+
   Dimension* = object
     id*: int = -1
     name*: string
     size*: uint
+
   Attribute* = object
     vid*: int = -1
     name*: string
@@ -57,15 +61,17 @@ type
       floatVal*: cfloat
     of NcDouble:
       doubleVal*: cdouble
-    else: discard
+    else:
+      discard
 
 template handleError*(body: untyped) =
   let retval: cint = body
   if retval != 0:
     {.line: instantiationInfo().}:
-      raise NetcdfError.newException:
+      raise NetcdfError.newException do:
         dedent"""
 
         $1 [$2]
         $3
-        """ % [$retval.ncstrerror, $retval, body.astToStr]
+        """ %
+          [$retval.ncstrerror, $retval, body.astToStr]

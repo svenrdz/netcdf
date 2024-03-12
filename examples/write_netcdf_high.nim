@@ -12,7 +12,6 @@ const
   ny = 17
 
 proc main() =
-
   # # This is the data array we will write. It will be filled with a
   # # progression of numbers for this example.
   # var data_out: array[nx, array[ny, cint]]
@@ -25,9 +24,9 @@ proc main() =
 
   # Same with seq
   var data_out: seq[seq[cint]]
-  for x in 0..<nx:
+  for x in 0 ..< nx:
     data_out.add @[]
-    for y in 0..<ny:
+    for y in 0 ..< ny:
       data_out[x].add x.cint * ny + y.cint
 
   # Create the file. The cmClobber (NcClobber) parameter tells netCDF to
@@ -51,10 +50,10 @@ proc main() =
   # Write the pretend data to the file. Although netCDF supports
   # reading and writing subsets of data, in this case we write all
   # the data in one operation.
-  echo "BEFORE ", ds["data"][cint, 0..<nx, 0..<ny]
+  echo "BEFORE ", ds["data"][cint, 0 ..< nx, 0 ..< ny]
   ds["data"] = data_out
   echo "ds[\"data\"] = data_out"
-  echo "AFTER ", ds["data"][cint, 0..<nx, 0..<ny]
+  echo "AFTER ", ds["data"][cint, 0 ..< nx, 0 ..< ny]
 
   # Close the file. This frees up any internal netCDF resources
   # associated with the file, and flushes any buffers.

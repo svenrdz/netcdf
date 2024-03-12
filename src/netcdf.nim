@@ -1,12 +1,4 @@
-import ./netcdf/[
-  bindings,
-  common,
-  dataset,
-  variable,
-  dimension,
-  attribute,
-  jsony_hooks,
-]
+import ./netcdf/[bindings, common, dataset, variable, dimension, attribute, jsony_hooks]
 
 export bindings
 export common

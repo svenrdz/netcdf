@@ -1,7 +1,4 @@
-import ./[
-  bindings,
-  common,
-]
+import ./[bindings, common]
 
 func getAtt*(id: NcId, vid, attId: int): Attribute =
   var
@@ -11,17 +8,10 @@ func getAtt*(id: NcId, vid, attId: int): Attribute =
   handleError:
     ncinqattname(id, vid.NcId, attId.NcId, name.cstring)
   handleError:
-    ncinqatt(id, vid.NcId,
-             name.cstring,
-             xtype.addr,
-             size.addr)
+    ncinqatt(id, vid.NcId, name.cstring, xtype.addr, size.addr)
   name.setLen(name.cstring.len)
-  result = Attribute(
-    vid: vid,
-    name: name[0..<name.cstring.len],
-    size: size,
-    xtype: xtype,
-  )
+  result =
+    Attribute(vid: vid, name: name[0 ..< name.cstring.len], size: size, xtype: xtype)
   case result.xtype
   of NcChar:
     result.strVal.setLen(result.size)
@@ -43,4 +33,5 @@ func getAtt*(id: NcId, vid, attId: int): Attribute =
   of NcDouble:
     handleError:
       ncgetattdouble(id, vid.NcId, name.cstring, result.doubleVal.addr)
-  else: discard
+  else:
+    discard

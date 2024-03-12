@@ -17,14 +17,22 @@ proc skipHook*(T: type Attribute, key: static string): bool =
 proc dumpHook*(s: var string, atts: seq[Attribute]) =
   var tab = initTable[string, JsonNode]()
   for att in atts:
-    tab[att.name] = case att.xtype:
-      of NcByte: %att.byteVal
-      of NcChar: %att.strVal
-      of NcShort: %att.shortVal
-      of NcInt: %att.intVal
-      of NcFloat: %att.floatVal
-      of NcDouble: %att.doubleVal
-      else: %nil
+    tab[att.name] =
+      case att.xtype
+      of NcByte:
+        %att.byteVal
+      of NcChar:
+        %att.strVal
+      of NcShort:
+        %att.shortVal
+      of NcInt:
+        %att.intVal
+      of NcFloat:
+        %att.floatVal
+      of NcDouble:
+        %att.doubleVal
+      else:
+        %nil
   s.add tab.toJson
 
 proc dumpHook*(s: var string, dims: seq[Dimension]) =

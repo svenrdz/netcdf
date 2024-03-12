@@ -33,6 +33,7 @@ type
     NcInt64 = 10
     NcUInt64 = 11
     NcString = 12
+
   nctype = NcType
 
 const NcLong* = NcInt

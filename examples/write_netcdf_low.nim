@@ -49,46 +49,45 @@ proc main() =
   # overwrite this file, if it already exists.*/
   retVal = nccreateproc(filename, NcClobber, ncid.unsafeaddr)
   if retval != 0:
-    err(retval);
+    err(retval)
 
   # Define the dimensions. NetCDF will hand back an ID for each.
   retVal = ncdefdim(ncid, "x", nx, x_dimid.unsafeAddr)
   if retVal != 0:
-     err(retval);
+    err(retval)
   retval = ncdefdim(ncid, "y", ny, y_dimid.unsafeAddr)
   if retVal != 0:
-     err(retval);
+    err(retval)
 
   # The dimids array is used to pass the IDs of the dimensions of
   # the variable.
-  dimids[0] = x_dimid;
-  dimids[1] = y_dimid;
+  dimids[0] = x_dimid
+  dimids[1] = y_dimid
 
   # Define the variable. The type of the variable in this case is
   # NcInt (4-byte integer).
-  retval = ncdefvar(ncid, "data", NcInt, ndims,
-                    dimids[0].unsafeAddr, varid.unsafeAddr)
+  retval = ncdefvar(ncid, "data", NcInt, ndims, dimids[0].unsafeAddr, varid.unsafeAddr)
   if retVal != 0:
-     err(retval);
+    err(retval)
 
   # End define mode. This tells netCDF we are done defining
   # metadata.
   retval = ncenddefproc(ncid)
   if retVal != 0:
-     err(retval);
+    err(retval)
 
   # Write the pretend data to the file. Although netCDF supports
   # reading and writing subsets of data, in this case we write all
   # the data in one operation.
   retval = ncputvarint(ncid, varid, data_out[0][0].unsafeAddr)
   if retVal != 0:
-     err(retval);
+    err(retval)
 
   # Close the file. This frees up any internal netCDF resources
   # associated with the file, and flushes any buffers.
   retval = ncclose(ncid)
   if retVal != 0:
-     err(retval);
+    err(retval)
 
   echo "*** SUCCESS writing example file " & filename
 

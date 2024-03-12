@@ -1,4 +1,3 @@
-
 import jsony
 import glob
 
@@ -8,14 +7,14 @@ type
   Ok = object
     filename: string
     headers: Dataset
+
   Err = object
     filename: string
     error: string
 
 proc processOne(fname: string) =
   try:
-    let
-      ok = Ok(filename: fname, headers: Dataset.open(fname))
+    let ok = Ok(filename: fname, headers: Dataset.open(fname))
     stdout.writeLine ok.toJson
     close ok.headers
   except Exception as e:
