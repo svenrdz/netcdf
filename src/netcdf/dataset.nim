@@ -7,7 +7,6 @@ import ./[
   attribute,
 ]
 
-
 proc open*(_: type Dataset,
            path: string,
            mode = omRead): Dataset =
@@ -21,7 +20,6 @@ proc open*(_: type Dataset,
   handleError:
     ncinq(result.id, ndim.addr, nvar.addr,
           natt.addr, unlimdimidp.addr)
-  # sleep 1
   result.dims = collect:
     for dimId in 0..<ndim:
       result.getDim(dimId)
@@ -50,4 +48,3 @@ template define*(ds: Dataset, body: untyped): untyped =
 proc close*(ds: Dataset) =
   handleError:
     ncClose(ds.id)
-
