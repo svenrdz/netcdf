@@ -40,6 +40,10 @@ const NcLong* = NcInt
 
 {.push dynlib: libnetcdf.}
 
+proc ncgetattschar*(
+  ncid: cint, varid: cint, name: cstring, ip: ptr int8
+): cint {.cdecl, importc: "nc_get_att_schar".}
+
 when defined(useFuthark):
   import std/os
   import futhark

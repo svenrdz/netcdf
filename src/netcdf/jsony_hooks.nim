@@ -1,5 +1,5 @@
 import std/[json, tables]
-import ./common
+import ./[bindings, common]
 import jsony
 
 proc skipHook*(T: type Dataset, key: static string): bool =
@@ -19,6 +19,8 @@ proc dumpHook*(s: var string, atts: seq[Attribute]) =
   for att in atts:
     tab[att.name] =
       case att.xtype
+      of NcNat:
+        %nil
       of NcByte:
         %att.byteVal
       of NcChar:
@@ -31,8 +33,19 @@ proc dumpHook*(s: var string, atts: seq[Attribute]) =
         %att.floatVal
       of NcDouble:
         %att.doubleVal
-      else:
-        %nil
+      of NcUByte:
+        %att.ubyteVal
+      of NcUShort:
+        %att.ushortVal
+      of NcUInt:
+        %att.uintVal
+      of NcInt64:
+        %att.int64Val
+      of NcUInt64:
+        %att.uint64Val
+      of NcString:
+        %att.stringsVal
+
   s.add tab.toJson
 
 proc dumpHook*(s: var string, dims: seq[Dimension]) =

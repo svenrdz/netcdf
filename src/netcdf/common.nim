@@ -49,20 +49,32 @@ type
     name*: string
     size*: uint
     case xtype*: NcType
+    of NcNat:
+      discard
     of NcByte:
-      byteVal*: byte
+      byteVal*: int8
     of NcChar:
       strVal*: string
     of NcShort:
-      shortVal*: cshort
+      shortVal*: int16
     of NcInt:
-      intVal*: cint
+      intVal*: int32
     of NcFloat:
       floatVal*: cfloat
     of NcDouble:
       doubleVal*: cdouble
-    else:
-      discard
+    of NcUByte:
+      ubyteVal*: uint8
+    of NcUShort:
+      ushortVal*: uint16
+    of NcUInt:
+      uintVal*: uint32
+    of NcInt64:
+      int64Val*: int64
+    of NcUInt64:
+      uint64Val*: uint64
+    of NcString:
+      stringsVal*: seq[string]
 
 template handleError*(body: untyped) =
   let retval: cint = body
